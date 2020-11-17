@@ -1,0 +1,15 @@
+/*
+ * Name: Dorivaldo Vicente dos Santos
+ * E-mail: dorivaldodossantos2000@gmail.com
+ * Phone: 944557610 / 992228230(WhatsApp)
+ * Github: https://github.com/DVS2000
+ * Site: https://dorivaldodossantos.herokuapp.com
+ */
+
+const path = require('path');
+
+module.exports = {
+    'config': path.resolve(__dirname, 'build', 'config', 'database.js'),
+    'migrations-path': path.resolve(__dirname, 'build', 'database', 'migrations'),
+    'models-path': path.resolve(__dirname, 'build', 'models')
+}
