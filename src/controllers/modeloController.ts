@@ -25,7 +25,7 @@ class ModeloController {
     } catch (err) {
       return res.status(500).json({
         data: null,
-        message: 'Ocorreu um interno'
+        message: 'Ocorreu um erro interno'
       })
     }
   }
@@ -52,7 +52,7 @@ class ModeloController {
     } catch (err) {
       return res.status(500).json({
         data: null,
-        message: 'Ocorreu um interno'
+        message: 'Ocorreu um erro interno'
       })
     }
   }
@@ -90,7 +90,7 @@ class ModeloController {
     } catch (err) {
       return res.status(500).json({
         data: null,
-        message: 'Ocorreu um interno'
+        message: 'Ocorreu um erro interno'
       })
     }
   }
@@ -115,7 +115,7 @@ class ModeloController {
     } catch (err) {
       return res.status(500).json({
         data: null,
-        message: 'Ocorreu um interno'
+        message: 'Ocorreu um erro interno'
       })
     }
   }

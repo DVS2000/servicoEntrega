@@ -21,7 +21,7 @@ class MarcaController {
     } catch (err) {
       return res.status(500).json({
         data: null,
-        message: 'Ocorreu um interno'
+        message: 'Ocorreu um erro interno'
       })
     }
   }
@@ -48,7 +48,7 @@ class MarcaController {
     } catch (err) {
       return res.status(500).json({
         data: null,
-        message: 'Ocorreu um interno'
+        message: 'Ocorreu um erro interno'
       })
     }
   }
@@ -87,7 +87,7 @@ class MarcaController {
       console.log(err)
       return res.status(500).json({
         data: null,
-        message: 'Ocorreu um interno'
+        message: 'Ocorreu um erro interno'
       })
     }
   }
@@ -112,7 +112,7 @@ class MarcaController {
     } catch (err) {
       return res.status(500).json({
         data: null,
-        message: 'Ocorreu um interno'
+        message: 'Ocorreu um erro interno'
       })
     }
   }

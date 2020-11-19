@@ -8,6 +8,7 @@
 
 import { Request, Response } from 'express'
 import VeiculoModel from '../models/veiculo'
+import { validateMatricula } from '../validators/validators'
 
 class VeiculoController {
   public async index (req: Request, res: Response): Promise<Response> {
@@ -25,16 +26,14 @@ class VeiculoController {
     } catch (err) {
       return res.status(500).json({
         data: null,
-        message: 'Ocorreu um interno'
+        message: 'Ocorreu um erro interno'
       })
     }
   }
 
   public async create (req: Request, res: Response): Promise<Response> {
     try {
-      const rexExpMatricula = /^[A-Z]{2}-\d{2}-\d{2}-[A-Z]{2}$|^[A-Z]{3}-\d{2}-\d{2}$/
-
-      if (!rexExpMatricula.test(req.body.matricula)) {
+      if (!validateMatricula(req.body.matricula)) {
         return res.status(400).json({
           data: null,
           message: 'Matrícula inváilida'
@@ -61,7 +60,7 @@ class VeiculoController {
     } catch (err) {
       return res.status(500).json({
         data: null,
-        message: 'Ocorreu um interno'
+        message: 'Ocorreu um erro interno'
       })
     }
   }
@@ -106,7 +105,7 @@ class VeiculoController {
     } catch (err) {
       return res.status(500).json({
         data: null,
-        message: 'Ocorreu um interno'
+        message: 'Ocorreu um erro interno'
       })
     }
   }
@@ -131,7 +130,7 @@ class VeiculoController {
     } catch (err) {
       return res.status(500).json({
         data: null,
-        message: 'Ocorreu um interno'
+        message: 'Ocorreu um erro interno'
       })
     }
   }
@@ -156,7 +155,7 @@ class VeiculoController {
     } catch (err) {
       return res.status(500).json({
         data: null,
-        message: 'Ocorreu um interno'
+        message: 'Ocorreu um erro interno'
       })
     }
   }

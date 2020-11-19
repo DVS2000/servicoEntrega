@@ -6,7 +6,7 @@
  * Site: https://dorivaldodossantos.herokuapp.com
  */
 
-import { Response, Request, NextFunction } from 'express'
+import { Request, Response, NextFunction } from 'express'
 import * as jwt from 'jsonwebtoken'
 import configJwt from '../config/jwtConfig'
 
@@ -30,7 +30,6 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
     })
   }
 
-
   const [scheme, token] = parts
 
   if (!/^Bearer$/i.test(scheme)) {
@@ -48,7 +47,7 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
       })
     }
 
-    res.userId = decoded.id
+    res.locals.user = decoded
     next()
   })
 }
