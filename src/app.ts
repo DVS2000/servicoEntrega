@@ -22,6 +22,7 @@ class App {
     private middlewares (): void {
       this.express.use(express.json())
       this.express.use(cors())
+      this.express.use('/upload', express.static('src/upload'))
     }
 
     private routes (): void {

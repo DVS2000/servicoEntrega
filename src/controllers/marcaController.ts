@@ -28,6 +28,13 @@ class MarcaController {
 
   public async create (req: Request, res: Response): Promise<Response> {
     try {
+      if (req.body.descricao.trim() === '') {
+        return res.status(400).json({
+          data: null,
+          message: 'Descrição inválida'
+        })
+      }
+
       const marcaFound = await MarcaModel.findOne({
         where: { descricao: req.body.descricao }
       })
@@ -61,6 +68,13 @@ class MarcaController {
         return res.status(404).json({
           data: null,
           message: 'Marca encontrada'
+        })
+      }
+
+      if (req.body.descricao.trim() === '') {
+        return res.status(400).json({
+          data: null,
+          message: 'Descrição inválida'
         })
       }
 

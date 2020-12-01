@@ -17,7 +17,8 @@ class AuthController {
       }
 
       const user = await User.findOne({
-        where: { phone: userValidade.phone }
+        where: { phone: userValidade.phone },
+        include: { association: 'tipo' }
       })
 
       if (!user) {
@@ -45,6 +46,70 @@ class AuthController {
         return res.status(400).json({
           data: null,
           message: 'A sua conta encontra-se desativada'
+        })
+      }
+
+      return res.json({
+        data: user,
+        token: jwtGenereate(user),
+        message: 'Login efetuado com sucesso'
+      })
+    } catch (err) {
+      return res.status(500).json({
+        data: null,
+        message: 'Ocorreu um erro interno'
+      })
+    }
+  }
+
+  public async loginAdmin (req: Request, res: Response): Promise<Response> {
+    try {
+      const userValidade = User.build(req.body)
+
+      if (!userValidade.validateModel().status) {
+        return res.status(400).json({
+          data: null,
+          message: userValidade.validateModel().message
+        })
+      }
+
+      const user = await User.findOne({
+        where: { phone: userValidade.phone },
+        include: { association: 'tipo' }
+      })
+
+      if (!user) {
+        return res.status(404).json({
+          data: null,
+          message: 'Telefone inexistente'
+        })
+      }
+
+      if (!(await user.checkPassword(userValidade.password))) {
+        return res.status(400).json({
+          data: null,
+          message: 'Palavra-passe incorrecta'
+        })
+      }
+
+      if (!user.isComplete) {
+        return res.status(400).json({
+          data: null,
+          message: 'Ative a tua conta, para poder fazer o login.'
+        })
+      }
+
+      if (!user.status) {
+        return res.status(400).json({
+          data: null,
+          message: 'A sua conta encontra-se desativada'
+        })
+      }
+
+      if (user.tipoId !== 4) {
+        return res.status(401).json({
+          data: null,
+          message: 'Não tens permissão, somente para admins '
         })
       }
 

@@ -7,6 +7,7 @@
  */
 
 import { Router } from 'express'
+import { multerConfig } from './config/multerConfig'
 import authController from './controllers/authController'
 import marcaController from './controllers/marcaController'
 import modeloController from './controllers/modeloController'
@@ -20,6 +21,7 @@ const routes = Router()
 // Rotas de autentição
 routes
   .post('/auth', authController.login)
+  .post('/auth/admin', authController.loginAdmin)
   .post('/forgetPassword', authController.forgotPassword)
   .post('/resetPassword', authController.resetPassword)
   .post('/ativeAccount', authController.ativeAccount)
@@ -35,7 +37,7 @@ routes
 // JWT
 routes.use(checkJwt)
 routes
-  .get('/user', userController.index)
+  .get('/users', userController.index)
   .get('/user', userController.getByIDorToken)
   .put('/user', userController.update)
   .delete('/user', userController.delete)
@@ -69,4 +71,13 @@ routes
   .delete('/veiculo/:id', veiculoController.delete)
   .get('/veiculo/:matricula', veiculoController.getByMatricula)
 
+// Rota para fazer o uload dos ficheiros (imgs, pdf, video....)
+routes.post('/uploadFile', multerConfig.single('file'), async (req, res) => {
+  const fileName = req.file.filename
+
+  return res.json({
+    data: 'http://localhost:3333/upload/' + fileName,
+    message: 'Upload efetuado com sucesso'
+  })
+})
 export default routes

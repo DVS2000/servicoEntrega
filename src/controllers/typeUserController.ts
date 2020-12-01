@@ -29,6 +29,13 @@ class TypeUserController {
 
   public async create (req: Request, res: Response): Promise<Response> {
     try {
+      if (req.body.descricao.trim() === '') {
+        return res.status(400).json({
+          data: null,
+          message: 'Descrição inválida'
+        })
+      }
+
       const typeUserFound = await TypeUserModel.findOne({
         where: { descricao: req.body.descricao }
       })
@@ -62,6 +69,13 @@ class TypeUserController {
         return res.status(404).json({
           data: null,
           message: 'Tipo de usário não encontrado'
+        })
+      }
+
+      if (req.body.descricao.trim() === '') {
+        return res.status(400).json({
+          data: null,
+          message: 'Descrição inválida'
         })
       }
 

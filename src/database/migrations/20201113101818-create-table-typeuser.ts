@@ -7,7 +7,7 @@ export async function up (q: QueryInterface) {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     descricao: {
       type: DataTypes.STRING,

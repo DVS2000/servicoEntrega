@@ -105,22 +105,26 @@ class UserController {
       }
 
       const { phone, email } = req.body
-      const foundByPhone = await User.findOne({ where: { phone } })
+      if (phone) {
+        const foundByPhone = await User.findOne({ where: { phone } })
 
-      if (foundByPhone?.id !== userFound.id) {
-        return res.status(400).json({
-          data: null,
-          message: 'Contacto existente'
-        })
+        if (foundByPhone?.id !== userFound.id) {
+          return res.status(400).json({
+            data: null,
+            message: 'Contacto existente'
+          })
+        }
       }
 
-      const foundByEmail = await User.findOne({ where: { email } })
+      if (email) {
+        const foundByEmail = await User.findOne({ where: { email } })
 
-      if (foundByEmail?.id !== userFound.id) {
-        return res.status(400).json({
-          data: null,
-          message: 'E-mail existente'
-        })
+        if (foundByEmail?.id !== userFound.id) {
+          return res.status(400).json({
+            data: null,
+            message: 'E-mail existente'
+          })
+        }
       }
 
       await userFound.update(req.body)
@@ -173,6 +177,13 @@ class UserController {
           association: 'tipo'
         }
       })
+
+      if (!user) {
+        return res.status(400).json({
+          data: null,
+          message: 'Usuário não foi encontrado'
+        })
+      }
 
       return res.json({
         data: user,
