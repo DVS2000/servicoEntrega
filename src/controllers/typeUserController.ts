@@ -12,7 +12,6 @@ import TypeUserModel from '../models/typeuser'
 class TypeUserController {
   public async index (req: Request, res: Response): Promise<Response> {
     try {
-      console.log(res.locals.user)
       const typesUser = await TypeUserModel.findAll()
 
       return res.json({

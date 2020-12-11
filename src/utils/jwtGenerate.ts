@@ -14,7 +14,8 @@ export function jwtGenereate (params: User): string {
   return jwt.sign(
     {
       id: params.id,
-      status: params.status
+      status: params.status,
+      type: params.tipoId
     },
     configJwt.jwtSecret,
     { expiresIn: 86400 }

@@ -11,6 +11,7 @@ import { multerConfig } from './config/multerConfig'
 import authController from './controllers/authController'
 import marcaController from './controllers/marcaController'
 import modeloController from './controllers/modeloController'
+import pedidoController from './controllers/pedidoController'
 import typeUserController from './controllers/typeUserController'
 import userController from './controllers/userController'
 import veiculoController from './controllers/veiculoController'
@@ -27,7 +28,7 @@ routes
   .post('/ativeAccount', authController.ativeAccount)
   .get('/ativeAccount/:id/:code', authController.ativeAccount)
 
-// Rotas para operções do user
+// Rotas para operações do user
 routes
   .post('/user', userController.create)
   .put('/user/:id', userController.update)
@@ -70,6 +71,15 @@ routes
   .put('/veiculo/:id', veiculoController.update)
   .delete('/veiculo/:id', veiculoController.delete)
   .get('/veiculo/:matricula', veiculoController.getByMatricula)
+
+routes
+  .get('/pedido', pedidoController.index)
+  .get('/pedido/:id', pedidoController.getByID)
+  .get('/pedido/cancel/:id', pedidoController.cancel)
+  .post('/pedido', pedidoController.store)
+  .put('/pedido/:id', pedidoController.update)
+  .put('/pedido/estado/:id', pedidoController.updateEstado)
+  .delete('/pedido/:id', pedidoController.delete)
 
 // Rota para fazer o uload dos ficheiros (imgs, pdf, video....)
 routes.post('/uploadFile', multerConfig.single('file'), async (req, res) => {

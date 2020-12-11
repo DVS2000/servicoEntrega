@@ -1,3 +1,11 @@
+/*
+ * Name: Dorivaldo Vicente dos Santos
+ * E-mail: dorivaldodossantos2000@gmail.com
+ * Phone: 944557610 / 992228230(WhatsApp)
+ * Github: https://github.com/DVS2000
+ * Site: https://dorivaldodossantos.herokuapp.com
+ */
+
 import { Request, Response } from 'express'
 import bcrypt from 'bcryptjs'
 import User from '../models/user'

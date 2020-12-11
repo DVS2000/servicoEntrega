@@ -8,7 +8,7 @@
 
 import Sequelize, { Model } from 'sequelize'
 import database from '../database/index'
-import MarcaModel from '../models/marca'
+import MarcaModel from './marca'
 
 interface IModelo {
   readonly id?: number

@@ -48,6 +48,7 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
     }
 
     res.locals.user = decoded
+    console.log(decoded)
     next()
   })
 }

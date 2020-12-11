@@ -92,8 +92,6 @@ class UserController {
         })
       }
 
-      console.log(res.locals.user)
-
       const id = res.locals.user.id || req.params.id
       const userFound = await User.findByPk(id)
 

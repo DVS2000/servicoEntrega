@@ -14,9 +14,22 @@ class VeiculoController {
   public async index (req: Request, res: Response): Promise<Response> {
     try {
       const veiculos = await VeiculoModel.findAll({
-        include: {
-          association: 'modelo'
-        }
+        include: [
+          {
+            association: 'modelo'
+          },
+          {
+            association: 'user',
+            attributes: [
+              'id',
+              'firstName',
+              'secondName',
+              'phone',
+              'email',
+              'urlPhoto'
+            ]
+          }
+        ]
       })
 
       return res.json({
@@ -24,6 +37,7 @@ class VeiculoController {
         message: 'Operação realizada com sucesso'
       })
     } catch (err) {
+      console.log(err)
       return res.status(500).json({
         data: null,
         message: 'Ocorreu um erro interno'
