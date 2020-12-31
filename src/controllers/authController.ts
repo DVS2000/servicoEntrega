@@ -114,7 +114,9 @@ class AuthController {
         })
       }
 
-      if (user.tipoId !== 4) {
+      const idTypeAdmin = process.env.PORT === undefined ? 4 : 1
+
+      if (user.tipoId !== idTypeAdmin) {
         return res.status(401).json({
           data: null,
           message: 'Não tens permissão, somente para admins '

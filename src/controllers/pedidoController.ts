@@ -35,6 +35,7 @@ class PedidoController {
 
       return res.json({
         data: pedidos,
+        total: await PedidoModel.count(),
         message: 'Pedidos encontrados com sucesso'
       })
     } catch (err) {
@@ -227,6 +228,38 @@ class PedidoController {
       return res.json({
         data: pedidos,
         message: 'Pedidos encontrados com sucesso'
+      })
+    } catch (err) {
+      return res.status(500).json({
+        data: null,
+        message: 'Ocorreu um erro interno'
+      })
+    }
+  }
+
+  public async countFinished (req: Request, res: Response): Promise<Response> {
+    try {
+      return res.json({
+        total: await PedidoModel.count({
+          where: { estado: Estado[2] }
+        }),
+        message: 'Operação efectuada com sucesso'
+      })
+    } catch (err) {
+      return res.status(500).json({
+        data: null,
+        message: 'Ocorreu um erro interno'
+      })
+    }
+  }
+
+  public async countCancel (req: Request, res: Response): Promise<Response> {
+    try {
+      return res.json({
+        total: await PedidoModel.count({
+          where: { estado: Estado[3] }
+        }),
+        message: 'Operação efetuada com sucesso'
       })
     } catch (err) {
       return res.status(500).json({

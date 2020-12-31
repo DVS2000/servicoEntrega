@@ -23,6 +23,8 @@ interface IPedidos {
   descricao?: string
   urlPhoto?: string
   localizacao?: string
+  localizacaoEntrega?: string
+  preco?: number
   clienteId?: number
   motoristaId?: number
   estado?: Estado
@@ -33,18 +35,26 @@ class PedidoModel extends Model<IPedidos> {
   public descricao!: string
   public urlPhoto?: string
   public localizacao?: string
+  public localizacaoEntrega?: string
+  public preco?: number
   public clienteId?: number
   public motoristaId?: number
   public estado?: Estado
 
-  public validateModel(): IValidade {
+  public validateModel (): IValidade {
     if (this.descricao?.length === 0 || this.descricao.length <= 6) {
       return { status: false, message: 'Descrição do pedido inválido ' }
+    } else if (this?.localizacao === null) {
+      return { status: false, message: 'Localização obrigatória' }
+    } else if (this?.localizacaoEntrega === null || this?.localizacaoEntrega === this?.localizacao) {
+      return { status: false, message: 'Local de entrega inválida' }
+    } else if (this?.preco === null) {
+      return { status: false, message: 'Preço inválido' }
     }
 
     return { status: true, message: 'Okey' }
   }
- 
+
   public validateCliente (cliente: User): IValidade {
     if (cliente.tipoId !== 2) {
       return { status: false, message: 'Usuário precisa ser um cliente' }
@@ -64,6 +74,8 @@ PedidoModel.init({
   descricao: Sequelize.STRING,
   urlPhoto: Sequelize.STRING,
   localizacao: Sequelize.STRING,
+  localizacaoEntrega: Sequelize.STRING,
+  preco: Sequelize.DECIMAL({ precision: 10, scale: 2 }),
   clienteId: Sequelize.INTEGER,
   motoristaId: Sequelize.INTEGER,
   estado: Sequelize.ENUM('Pendente', 'Em Andamento', 'Concluído', 'Cancelado')

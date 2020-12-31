@@ -16,6 +16,7 @@ import typeUserController from './controllers/typeUserController'
 import userController from './controllers/userController'
 import veiculoController from './controllers/veiculoController'
 import { checkJwt } from './middlewares/checkJWT'
+import sharp from 'sharp'
 
 const routes = Router()
 
@@ -26,14 +27,13 @@ routes
   .post('/forgetPassword', authController.forgotPassword)
   .post('/resetPassword', authController.resetPassword)
   .post('/ativeAccount', authController.ativeAccount)
-  .get('/ativeAccount/:id/:code', authController.ativeAccount)
+  .get('/ativeAccount/:id([0-9]+)/:code', authController.ativeAccount)
 
 // Rotas para operações do user
 routes
   .post('/user', userController.create)
-  .put('/user/:id', userController.update)
-  .delete('/user/:id', userController.delete)
-  .get('/user/:id', userController.getByIDorToken)
+  .delete('/user/:id([0-9]+)', userController.delete)
+  .get('/user/:id([0-9]+)', userController.getByIDorToken)
 
 // JWT
 routes.use(checkJwt)
@@ -41,52 +41,60 @@ routes
   .get('/users', userController.index)
   .get('/user', userController.getByIDorToken)
   .put('/user', userController.update)
+  .put('/user/:id([0-9]+)', userController.update)
   .delete('/user', userController.delete)
+  .delete('/user/:id([0-9]+)', userController.delete)
 
 // Rotas das operações do Tipo de Usuário
 routes
   .get('/typeUser', typeUserController.index)
   .post('/typeUser', typeUserController.create)
-  .put('/typeuser/:id', typeUserController.update)
-  .delete('/typeuser/:id', typeUserController.delete)
+  .put('/typeuser/:id([0-9]+)', typeUserController.update)
+  .delete('/typeuser/:id([0-9]+)', typeUserController.delete)
 
 // Rotas das operações da marca
 routes
   .post('/marca', marcaController.create)
-  .put('/marca/:id', marcaController.update)
+  .put('/marca/:id([0-9]+)', marcaController.update)
   .get('/marca', marcaController.index)
-  .delete('/marca/:id', marcaController.delete)
+  .delete('/marca/:id([0-9]+)', marcaController.delete)
 
 // Rotas para operações do Modelo
 routes
   .get('/modelo', modeloController.index)
   .post('/modelo', modeloController.create)
-  .put('/modelo/:id', modeloController.update)
-  .delete('/modelo/:id', modeloController.delete)
+  .put('/modelo/:id([0-9]+)', modeloController.update)
+  .delete('/modelo/:id([0-9]+)', modeloController.delete)
 
 // Rotas para operações do veiculos
 routes
   .get('/veiculo', veiculoController.index)
   .post('/veiculo', veiculoController.create)
-  .put('/veiculo/:id', veiculoController.update)
-  .delete('/veiculo/:id', veiculoController.delete)
+  .put('/veiculo/:id([0-9]+)', veiculoController.update)
+  .delete('/veiculo/:id([0-9]+)', veiculoController.delete)
   .get('/veiculo/:matricula', veiculoController.getByMatricula)
 
 routes
   .get('/pedido', pedidoController.index)
-  .get('/pedido/:id', pedidoController.getByID)
-  .get('/pedido/cancel/:id', pedidoController.cancel)
+  .get('/pedido/:id([0-9]+)', pedidoController.getByID)
+  .get('/pedido/cancel/:id([0-9]+)', pedidoController.cancel)
+  .get('/pedido/countFinished', pedidoController.countFinished)
+  .get('/pedido/countCancel', pedidoController.countCancel)
   .post('/pedido', pedidoController.store)
-  .put('/pedido/:id', pedidoController.update)
-  .put('/pedido/estado/:id', pedidoController.updateEstado)
-  .delete('/pedido/:id', pedidoController.delete)
+  .put('/pedido/:id([0-9]+)', pedidoController.update)
+  .put('/pedido/estado/:id([0-9]+)', pedidoController.updateEstado)
+  .delete('/pedido/:id([0-9]+)', pedidoController.delete)
 
 // Rota para fazer o uload dos ficheiros (imgs, pdf, video....)
 routes.post('/uploadFile', multerConfig.single('file'), async (req, res) => {
-  const fileName = req.file.filename
+  const outputImage = `src/upload/${new Date().getTime().toString()}.jpg`
+
+  sharp(req.file.path).resize({ height: 200, width: 200 }).toFile(outputImage).then(file => {
+    console.log(file)
+  }).catch(err => console.log(err))
 
   return res.json({
-    data: 'http://localhost:3333/upload/' + fileName,
+    data: 'http://localhost:3333/' + outputImage.replace('src/', ''),
     message: 'Upload efetuado com sucesso'
   })
 })
