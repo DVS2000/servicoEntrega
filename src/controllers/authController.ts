@@ -45,14 +45,14 @@ class AuthController {
 
       if (!user.isComplete) {
         return res.status(400).json({
-          data: null,
+          data: user,
           message: 'Ative a tua conta, para poder fazer o login.'
         })
       }
 
       if (!user.status) {
         return res.status(400).json({
-          data: null,
+          data: user,
           message: 'A sua conta encontra-se desativada'
         })
       }
@@ -227,7 +227,7 @@ class AuthController {
     try {
       const id = req.params.id
       const code = req.body.code || req.params.code
-      const user = id ? await User.findByPk(id) : await User.findOne({ where: { phone: req.body.phone } })
+      const user = id ? await User.findOne({ where: { id }, include: { association: 'tipo ' } }) : await User.findOne({ where: { phone: req.body.phone }, include: { association: 'tipo' } })
 
       if (!user) {
         return res.status(404).json({

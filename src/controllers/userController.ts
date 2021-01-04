@@ -95,7 +95,10 @@ class UserController {
       }
 
       const id = req.params.id ? req.params.id : res.locals.user.id
-      const userFound = await User.findByPk(id)
+      const userFound = await User.findOne({
+        where: { id },
+        include: { association: 'tipo' }
+      })
 
       console.log(userFound)
 

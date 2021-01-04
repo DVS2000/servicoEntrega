@@ -132,7 +132,7 @@ User.addHook(
   async (user: User): Promise<void> => {
     if (user.password) {
       user.passwordHash = await bcrypt.hash(user.password, 8)
-      user.status = false
+      user.status = true
       user.isComplete = false
     }
 
