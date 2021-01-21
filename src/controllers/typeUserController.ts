@@ -53,6 +53,7 @@ class TypeUserController {
         message: 'Operação efetuada com sucesso'
       })
     } catch (err) {
+      console.log(err)
       return res.status(500).json({
         data: null,
         message: 'Ocorreu um erro interno'

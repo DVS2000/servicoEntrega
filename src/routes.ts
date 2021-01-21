@@ -17,6 +17,7 @@ import userController from './controllers/userController'
 import veiculoController from './controllers/veiculoController'
 import { checkJwt } from './middlewares/checkJWT'
 import sharp from 'sharp'
+import { checkRole } from './middlewares/checkRole'
 
 const routes = Router()
 
@@ -24,6 +25,7 @@ const routes = Router()
 routes
   .post('/auth', authController.login)
   .post('/auth/admin', authController.loginAdmin)
+  .post('/auth/drive', authController.loginDrive)
   .post('/forgetPassword', authController.forgotPassword)
   .post('/resetPassword', authController.resetPassword)
   .post('/ativeAccount', authController.ativeAccount)
@@ -38,7 +40,7 @@ routes
 // JWT
 routes.use(checkJwt)
 routes
-  .get('/users', userController.index)
+  .get('/users', checkRole(4), userController.index)
   .get('/user', userController.getByIDorToken)
   .put('/user', userController.update)
   .put('/user/:id([0-9]+)', userController.update)
@@ -47,32 +49,32 @@ routes
 
 // Rotas das operações do Tipo de Usuário
 routes
-  .get('/typeUser', typeUserController.index)
-  .post('/typeUser', typeUserController.create)
-  .put('/typeuser/:id([0-9]+)', typeUserController.update)
-  .delete('/typeuser/:id([0-9]+)', typeUserController.delete)
+  .get('/typeUser', checkRole(4), typeUserController.index)
+  .post('/typeUser', checkRole(4), typeUserController.create)
+  .put('/typeuser/:id([0-9]+)', checkRole(4), typeUserController.update)
+  .delete('/typeuser/:id([0-9]+)', checkRole(4), typeUserController.delete)
 
 // Rotas das operações da marca
 routes
-  .post('/marca', marcaController.create)
-  .put('/marca/:id([0-9]+)', marcaController.update)
-  .get('/marca', marcaController.index)
-  .delete('/marca/:id([0-9]+)', marcaController.delete)
+  .post('/marca', checkRole(4), marcaController.create)
+  .put('/marca/:id([0-9]+)', checkRole(4), marcaController.update)
+  .get('/marca', checkRole(4), marcaController.index)
+  .delete('/marca/:id([0-9]+)', checkRole(4), marcaController.delete)
 
 // Rotas para operações do Modelo
 routes
-  .get('/modelo', modeloController.index)
-  .post('/modelo', modeloController.create)
-  .put('/modelo/:id([0-9]+)', modeloController.update)
-  .delete('/modelo/:id([0-9]+)', modeloController.delete)
+  .get('/modelo', checkRole(4), modeloController.index)
+  .post('/modelo', checkRole(4), modeloController.create)
+  .put('/modelo/:id([0-9]+)', checkRole(4), modeloController.update)
+  .delete('/modelo/:id([0-9]+)', checkRole(4), modeloController.delete)
 
 // Rotas para operações do veiculos
 routes
-  .get('/veiculo', veiculoController.index)
-  .post('/veiculo', veiculoController.create)
-  .put('/veiculo/:id([0-9]+)', veiculoController.update)
-  .delete('/veiculo/:id([0-9]+)', veiculoController.delete)
-  .get('/veiculo/:matricula', veiculoController.getByMatricula)
+  .get('/veiculo', checkRole(4), veiculoController.index)
+  .post('/veiculo', checkRole(4), veiculoController.create)
+  .put('/veiculo/:id([0-9]+)', checkRole(4), veiculoController.update)
+  .delete('/veiculo/:id([0-9]+)', checkRole(4), veiculoController.delete)
+  .get('/veiculo/:matricula', checkRole(4), veiculoController.getByMatricula)
 
 routes
   .get('/pedido', pedidoController.index)

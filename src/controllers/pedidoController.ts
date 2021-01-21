@@ -64,12 +64,14 @@ class PedidoController {
         })
       }
 
-      const pedido = await PedidoModel.create({ ...req.body, estado: Estado[0] })
+      const pedido = await PedidoModel.create({ ...req.body, estado: Estado[0], clienteId: res.locals.user.id })
+
       return res.json({
         data: pedido,
         message: 'Pedido creatado com sucesso'
       })
     } catch (err) {
+      console.log(err)
       return res.status(500).json({
         data: null,
         message: 'Ocorreu um erro interno'

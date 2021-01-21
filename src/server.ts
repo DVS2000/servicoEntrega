@@ -1,5 +1,5 @@
-import app from './app'
+import { App } from './app'
 
-app.listen(process.env.PORT || 3333, () => {
-  console.log('Rodando')
-})
+const application = new App().app
+
+export { application }

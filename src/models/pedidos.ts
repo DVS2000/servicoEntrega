@@ -8,7 +8,7 @@
 
 import Sequelize, { Model } from 'sequelize'
 import database from '../database/index'
-import { IValidade } from '../utils/interface_validate_error'
+import { IValidade } from '../interfaces/interface_validate_error'
 import User from './user'
 
 export enum Estado {
