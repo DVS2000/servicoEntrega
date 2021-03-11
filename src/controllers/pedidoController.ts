@@ -5,6 +5,9 @@ class PedidoController {
   public async index (req: Request, res: Response): Promise<Response> {
     try {
       const pedidos = await PedidoModel.findAll({
+        order: [
+          ['created_at', 'DESC']
+        ],
         include: [
           {
             association: 'cliente',
@@ -39,6 +42,7 @@ class PedidoController {
         message: 'Pedidos encontrados com sucesso'
       })
     } catch (err) {
+      console.log(err)
       return res.status(500).json({
         data: null,
         message: 'Ocorreu um erro interno'
@@ -98,14 +102,14 @@ class PedidoController {
         })
       }
 
-      if (res.locals.type !== 2) {
+      if (res.locals.user.type !== 2) {
         return res.status(403).json({
           data: null,
           message: 'Cliente inválido'
         })
       }
 
-      await pedido.update(req.body)
+      await pedido.update({ ...req.body, clienteId: res.locals.user.id })
 
       return res.json({
         data: pedido,

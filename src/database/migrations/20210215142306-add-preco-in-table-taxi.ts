@@ -1,14 +1,14 @@
-import { DataTypes, QueryInterface } from 'sequelize'
+import { QueryInterface, DataTypes } from 'sequelize'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function up (q: QueryInterface) {
-  await q.addColumn('pedidos', 'estado', {
-    type: DataTypes.ENUM('Pendente', 'Em Andamento', 'Concluído', 'Cancelado'),
+  await q.addColumn('taxi', 'preco', {
+    type: DataTypes.DECIMAL({ precision: 10, scale: 2 }),
     allowNull: false
   })
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function down (q: QueryInterface) {
-  await q.removeColumn('pedidos', 'estado')
+  await q.removeColumn('pedidos', 'preco')
 }

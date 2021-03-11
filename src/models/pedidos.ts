@@ -28,6 +28,11 @@ interface IPedidos {
   clienteId?: number
   motoristaId?: number
   estado?: Estado
+  refPartida?: string
+  refEntrega?: string
+  nomeChegada?: string
+  telefoneChegada?: string
+  infoAd?: string
 }
 
 class PedidoModel extends Model<IPedidos> {
@@ -40,6 +45,11 @@ class PedidoModel extends Model<IPedidos> {
   public clienteId?: number
   public motoristaId?: number
   public estado?: Estado
+  public refPartida?: string
+  public refEntrega?: string
+  public nomeChegada?: string
+  public telefoneChegada?: string
+  public infoAd?: string
 
   public validateModel (): IValidade {
     if (this.descricao?.length === 0 || this.descricao.length <= 6) {
@@ -78,7 +88,12 @@ PedidoModel.init({
   preco: Sequelize.DECIMAL({ precision: 10, scale: 2 }),
   clienteId: Sequelize.INTEGER,
   motoristaId: Sequelize.INTEGER,
-  estado: Sequelize.ENUM('Pendente', 'Em Andamento', 'Concluído', 'Cancelado')
+  estado: Sequelize.ENUM('Pendente', 'Em Andamento', 'Concluído', 'Cancelado'),
+  refPartida: Sequelize.STRING,
+  refEntrega: Sequelize.STRING,
+  nomeChegada: Sequelize.STRING,
+  telefoneChegada: Sequelize.STRING,
+  infoAd: Sequelize.STRING
 }, { sequelize: database, tableName: 'pedidos' })
 
 PedidoModel.belongsTo(User, {

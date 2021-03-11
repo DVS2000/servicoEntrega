@@ -36,7 +36,7 @@ export class App {
     }
 
     private routes (): void {
-      this._app.use(routes)
+      this._app.use('/api/v2', routes)
     }
 
     private listen (): void {
@@ -50,6 +50,16 @@ export class App {
         client.on('user_connected', (data: IUser) => {
           this.users.push(data)
           client.join(`${data.tipo}`)
+        })
+
+        client.on('user', (data: IUser) => {
+          this.users.push(data)
+          console.log(this.users)
+        })
+
+        client.on('send', (data) => {
+          const user = this.users.filter((x) => x.tipo === data)[0]
+          this.io.to(user.id).emit('msg', `ESSA MENSAGEM É PARA ${user.tipo}`)
         })
 
         client.on('send_by_client', (data: IMessageClient) => {

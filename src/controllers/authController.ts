@@ -29,15 +29,6 @@ class AuthController {
         include: { association: 'tipo' }
       })
 
-      const idType = process.env.PORT === undefined ? 2 : 2
-
-      if (user?.tipoId !== idType) {
-        return res.status(401).json({
-          data: null,
-          message: 'Não tens permissão, somente para clientes '
-        })
-      }
-
       if (!user) {
         return res.status(404).json({
           data: null,
@@ -66,12 +57,21 @@ class AuthController {
         })
       }
 
+      const idType = process.env.PORT === undefined ? 2 : 2
+
+      if (user?.tipoId !== idType) {
+        return res.status(401).json({
+          data: null,
+          message: 'Não tens permissão, somente para clientes '
+        })
+      }
       return res.json({
         data: user,
         token: jwtGenereate(user),
         message: 'Login efetuado com sucesso'
       })
     } catch (err) {
+      console.log(err)
       return res.status(500).json({
         data: null,
         message: 'Ocorreu um erro interno'
