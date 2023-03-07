@@ -2,13 +2,12 @@ import { Options } from 'sequelize'
 
 export const dbConfig: Options = {
   dialect: 'mysql',
-  host: 'localhost',
-  username: 'root',
-  password: '',
-  database: 'servico_entrega',
+  host: 'bqyeibjetldkoftdyfow-mysql.services.clever-cloud.com',
+  username: 'u2saoq57ijsitkbi',
+  password: 'BwQwV8UoeGK3nuNMj3ns',
+  database: 'bqyeibjetldkoftdyfow',
   define: {
     timestamps: true,
     underscored: true
   }
 }
-

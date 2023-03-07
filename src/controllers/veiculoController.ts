@@ -34,6 +34,7 @@ class VeiculoController {
 
       return res.json({
         data: veiculos,
+        total: await VeiculoModel.count(),
         message: 'Operação realizada com sucesso'
       })
     } catch (err) {

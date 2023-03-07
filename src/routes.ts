@@ -16,6 +16,9 @@ import typeUserController from './controllers/typeUserController'
 import userController from './controllers/userController'
 import veiculoController from './controllers/veiculoController'
 import { checkJwt } from './middlewares/checkJWT'
+import sharp from 'sharp'
+import { checkRole } from './middlewares/checkRole'
+import taxiController from './controllers/taxiController'
 
 const routes = Router()
 
@@ -23,70 +26,87 @@ const routes = Router()
 routes
   .post('/auth', authController.login)
   .post('/auth/admin', authController.loginAdmin)
+  .post('/auth/drive', authController.loginDrive)
   .post('/forgetPassword', authController.forgotPassword)
   .post('/resetPassword', authController.resetPassword)
   .post('/ativeAccount', authController.ativeAccount)
-  .get('/ativeAccount/:id/:code', authController.ativeAccount)
+  .get('/ativeAccount/:id([0-9]+)/:code', authController.ativeAccount)
 
 // Rotas para operações do user
 routes
   .post('/user', userController.create)
-  .put('/user/:id', userController.update)
-  .delete('/user/:id', userController.delete)
-  .get('/user/:id', userController.getByIDorToken)
+  .delete('/user/:id([0-9]+)', userController.delete)
+  .get('/user/:id([0-9]+)', userController.getByIDorToken)
 
 // JWT
 routes.use(checkJwt)
 routes
-  .get('/users', userController.index)
+  .get('/users', checkRole(4), userController.index)
   .get('/user', userController.getByIDorToken)
   .put('/user', userController.update)
+  .put('/user/:id([0-9]+)', userController.update)
   .delete('/user', userController.delete)
+  .delete('/user/:id([0-9]+)', userController.delete)
 
 // Rotas das operações do Tipo de Usuário
 routes
-  .get('/typeUser', typeUserController.index)
-  .post('/typeUser', typeUserController.create)
-  .put('/typeuser/:id', typeUserController.update)
-  .delete('/typeuser/:id', typeUserController.delete)
+  .get('/typeUser', checkRole(4), typeUserController.index)
+  .post('/typeUser', checkRole(4), typeUserController.create)
+  .put('/typeuser/:id([0-9]+)', checkRole(4), typeUserController.update)
+  .delete('/typeuser/:id([0-9]+)', checkRole(4), typeUserController.delete)
 
 // Rotas das operações da marca
 routes
-  .post('/marca', marcaController.create)
-  .put('/marca/:id', marcaController.update)
-  .get('/marca', marcaController.index)
-  .delete('/marca/:id', marcaController.delete)
+  .post('/marca', checkRole(4), marcaController.create)
+  .put('/marca/:id([0-9]+)', checkRole(4), marcaController.update)
+  .get('/marca', checkRole(4), marcaController.index)
+  .delete('/marca/:id([0-9]+)', checkRole(4), marcaController.delete)
 
 // Rotas para operações do Modelo
 routes
-  .get('/modelo', modeloController.index)
-  .post('/modelo', modeloController.create)
-  .put('/modelo/:id', modeloController.update)
-  .delete('/modelo/:id', modeloController.delete)
+  .get('/modelo', checkRole(4), modeloController.index)
+  .post('/modelo', checkRole(4), modeloController.create)
+  .put('/modelo/:id([0-9]+)', checkRole(4), modeloController.update)
+  .delete('/modelo/:id([0-9]+)', checkRole(4), modeloController.delete)
 
 // Rotas para operações do veiculos
 routes
-  .get('/veiculo', veiculoController.index)
-  .post('/veiculo', veiculoController.create)
-  .put('/veiculo/:id', veiculoController.update)
-  .delete('/veiculo/:id', veiculoController.delete)
-  .get('/veiculo/:matricula', veiculoController.getByMatricula)
+  .get('/veiculo', checkRole(4), veiculoController.index)
+  .post('/veiculo', checkRole(4), veiculoController.create)
+  .put('/veiculo/:id([0-9]+)', checkRole(4), veiculoController.update)
+  .delete('/veiculo/:id([0-9]+)', checkRole(4), veiculoController.delete)
+  .get('/veiculo/:matricula', checkRole(4), veiculoController.getByMatricula)
 
+// Rotas para operações do pedido
 routes
   .get('/pedido', pedidoController.index)
-  .get('/pedido/:id', pedidoController.getByID)
-  .get('/pedido/cancel/:id', pedidoController.cancel)
+  .get('/pedido/:id([0-9]+)', pedidoController.getByID)
+  .get('/pedido/cancel/:id([0-9]+)', pedidoController.cancel)
+  .get('/pedido/countFinished', pedidoController.countFinished)
+  .get('/pedido/countCancel', pedidoController.countCancel)
   .post('/pedido', pedidoController.store)
-  .put('/pedido/:id', pedidoController.update)
-  .put('/pedido/estado/:id', pedidoController.updateEstado)
-  .delete('/pedido/:id', pedidoController.delete)
+  .put('/pedido/:id([0-9]+)', pedidoController.update)
+  .put('/pedido/estado/:id([0-9]+)', pedidoController.updateEstado)
+  .delete('/pedido/:id([0-9]+)', pedidoController.delete)
+
+// Rotas para operações do TAXI
+routes
+  .get('/taxi', taxiController.index)
+  .get('/taxi/:id([0-9]+)', taxiController.getByID)
+  .post('/taxi', taxiController.store)
+  .put('/taxi/:id([0-9]+)', taxiController.update)
+  .delete('/taxi/:id([0-9]+)', taxiController.delete)
 
 // Rota para fazer o uload dos ficheiros (imgs, pdf, video....)
 routes.post('/uploadFile', multerConfig.single('file'), async (req, res) => {
-  const fileName = req.file.filename
+  const outputImage = `src/upload/${new Date().getTime().toString()}.jpg`
+
+  sharp(req.file.path).resize({ height: 200, width: 200 }).toFile(outputImage).then(file => {
+    console.log(file)
+  }).catch(err => console.log(err))
 
   return res.json({
-    data: 'http://localhost:3333/upload/' + fileName,
+    data: 'http://localhost:3333/' + outputImage.replace('src/', ''),
     message: 'Upload efetuado com sucesso'
   })
 })

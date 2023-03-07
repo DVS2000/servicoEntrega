@@ -1,4 +1,4 @@
-import { DataTypes, QueryInterface } from 'sequelize';
+import { DataTypes, QueryInterface } from 'sequelize'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function up (q: QueryInterface) {

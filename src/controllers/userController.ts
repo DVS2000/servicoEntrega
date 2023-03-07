@@ -22,6 +22,7 @@ class UserController {
 
       return res.json({
         data: users,
+        total: await User.count(),
         message: 'Operação efetuada com sucesso'
       })
     } catch (err) {
@@ -74,6 +75,7 @@ class UserController {
         message: 'Usuário criado com sucesso'
       })
     } catch (err) {
+      console.log(err)
       return res.status(500).json({
         data: null,
         message: 'Ocorreu um erro interno'
@@ -92,8 +94,13 @@ class UserController {
         })
       }
 
-      const id = res.locals.user.id || req.params.id
-      const userFound = await User.findByPk(id)
+      const id = req.params.id ? req.params.id : res.locals.user.id
+      const userFound = await User.findOne({
+        where: { id },
+        include: { association: 'tipo' }
+      })
+
+      console.log(userFound)
 
       if (!userFound) {
         return res.status(404).json({
@@ -106,22 +113,27 @@ class UserController {
       if (phone) {
         const foundByPhone = await User.findOne({ where: { phone } })
 
-        if (foundByPhone?.id !== userFound.id) {
-          return res.status(400).json({
-            data: null,
-            message: 'Contacto existente'
-          })
+        if (foundByPhone) {
+          if (foundByPhone?.id !== userFound.id) {
+            return res.status(400).json({
+              data: null,
+              message: 'Contacto existente'
+            })
+          }
         }
       }
 
       if (email) {
         const foundByEmail = await User.findOne({ where: { email } })
+        console.log(foundByEmail)
 
-        if (foundByEmail?.id !== userFound.id) {
-          return res.status(400).json({
-            data: null,
-            message: 'E-mail existente'
-          })
+        if (foundByEmail) {
+          if (foundByEmail?.id !== userFound.id) {
+            return res.status(400).json({
+              data: null,
+              message: 'E-mail existente'
+            })
+          }
         }
       }
 
@@ -143,7 +155,7 @@ class UserController {
 
   public async delete (req: Request, res: Response): Promise<Response> {
     try {
-      const id = res.locals.user.id || req.params.id
+      const id = req.params.id ? req.params.id : res.locals.user.id
       const userFound = await User.findByPk(id)
 
       if (!userFound) {

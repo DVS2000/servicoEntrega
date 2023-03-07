@@ -10,7 +10,7 @@ import Sequelize, { Model } from 'sequelize'
 import bcrypt from 'bcryptjs'
 import database from '../database/index'
 import TypeUser from '../models/typeuser'
-import { IValidade } from '../utils/interface_validate_error'
+import { IValidade } from '../interfaces/interface_validate_error'
 import { validateEmail, validateFieldNumber, validateFieldText, validateLengthText, validateMaxLength } from '../validators/validators'
 
 interface IUser {
@@ -132,7 +132,7 @@ User.addHook(
   async (user: User): Promise<void> => {
     if (user.password) {
       user.passwordHash = await bcrypt.hash(user.password, 8)
-      user.status = false
+      user.status = true
       user.isComplete = false
     }
 

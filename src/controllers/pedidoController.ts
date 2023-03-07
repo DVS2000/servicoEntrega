@@ -5,6 +5,9 @@ class PedidoController {
   public async index (req: Request, res: Response): Promise<Response> {
     try {
       const pedidos = await PedidoModel.findAll({
+        order: [
+          ['created_at', 'DESC']
+        ],
         include: [
           {
             association: 'cliente',
@@ -35,9 +38,11 @@ class PedidoController {
 
       return res.json({
         data: pedidos,
+        total: await PedidoModel.count(),
         message: 'Pedidos encontrados com sucesso'
       })
     } catch (err) {
+      console.log(err)
       return res.status(500).json({
         data: null,
         message: 'Ocorreu um erro interno'
@@ -63,12 +68,14 @@ class PedidoController {
         })
       }
 
-      const pedido = await PedidoModel.create({ ...req.body, estado: Estado[0] })
+      const pedido = await PedidoModel.create({ ...req.body, estado: Estado[0], clienteId: res.locals.user.id })
+
       return res.json({
         data: pedido,
         message: 'Pedido creatado com sucesso'
       })
     } catch (err) {
+      console.log(err)
       return res.status(500).json({
         data: null,
         message: 'Ocorreu um erro interno'
@@ -95,14 +102,14 @@ class PedidoController {
         })
       }
 
-      if (res.locals.type !== 2) {
+      if (res.locals.user.type !== 2) {
         return res.status(403).json({
           data: null,
           message: 'Cliente inválido'
         })
       }
 
-      await pedido.update(req.body)
+      await pedido.update({ ...req.body, clienteId: res.locals.user.id })
 
       return res.json({
         data: pedido,
@@ -227,6 +234,38 @@ class PedidoController {
       return res.json({
         data: pedidos,
         message: 'Pedidos encontrados com sucesso'
+      })
+    } catch (err) {
+      return res.status(500).json({
+        data: null,
+        message: 'Ocorreu um erro interno'
+      })
+    }
+  }
+
+  public async countFinished (req: Request, res: Response): Promise<Response> {
+    try {
+      return res.json({
+        total: await PedidoModel.count({
+          where: { estado: Estado[2] }
+        }),
+        message: 'Operação efectuada com sucesso'
+      })
+    } catch (err) {
+      return res.status(500).json({
+        data: null,
+        message: 'Ocorreu um erro interno'
+      })
+    }
+  }
+
+  public async countCancel (req: Request, res: Response): Promise<Response> {
+    try {
+      return res.json({
+        total: await PedidoModel.count({
+          where: { estado: Estado[3] }
+        }),
+        message: 'Operação efetuada com sucesso'
       })
     } catch (err) {
       return res.status(500).json({
